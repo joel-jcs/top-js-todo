@@ -152,6 +152,16 @@ button {
     padding:5px 10px;
 }
 
+.task-item:hover {
+    opacity:0.6;
+    cursor:pointer;
+} 
+
+#add-task-btn {
+    color:rgb(177, 177, 177);
+    font-size:0.9rem;
+}
+
 .checkbox {
     position: relative;
     display: inline-block;
@@ -165,7 +175,7 @@ button {
     user-select: none;
 }
 
-.task-label {
+.task-name {
     font-weight: bold;
     line-height: 20px;
 }
