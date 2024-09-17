@@ -6,8 +6,8 @@ const TaskController = () => {
             description: "at the mall",
             dueDate: "today",
             priority: "high",
+            list: "personal",
             notes: "text for notes",
-            list: "personal"
         }
     ];
 

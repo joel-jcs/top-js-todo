@@ -108,31 +108,36 @@ const ScreenController = function () {
         const expandedTaskItem = document.createElement('div');
         expandedTaskItem.id = "expanded-task-item";
         expandedTaskItem.innerHTML = `
-            <label class="task-input-label" for="task-title">Title: </label>
-            <input id="task-title" type="text" placeholder="Pet my doggo"> 
+            <label id="task-title-label" class="task-input-label" for="task-title">Title: 
+                <input id="task-title" type="text" placeholder="Pet my doggo"> 
+            </label>
 
-            <label class="task-input-label" for="task-desc">Description: </label>
-            <input id="task-desc" type="textarea" placeholder="Pet doggo on his belly, paws, etc."> 
+            <label id="task-desc-label" class="task-input-label" for="task-desc">Description: 
+                <textarea id="task-desc" wrap="soft" maxlength="450" placeholder="First do the belly... etc. (Max 450 characters) "></textarea> 
+            </label>
 
-            <label class="task-input-label" for="task-date">Due Date: </label>
-            <input id="task-date" type="date">
+            <label id="task-date-label" class="task-input-label" for="task-date">Due Date: 
+                <input id="task-date" type="date">
+            </label>
 
-            <label class="task-input-label" for="task-priority">Priority: </label>
-            <select id="task-priority">
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-            </select>
+            <label id="task-priority-label" class="task-input-label" for="task-priority">Priority: 
+                <select id="task-priority">
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </label>
 
+            <label id="task-list-label" class="task-input-label" for="task-list">List: 
             <select id="task-list">
                 <option value="list1">List 1</option>
                 <option value="new-list">+ Create new list</option>
             </select>
+            </label>
 
-            <label class="task-input-label" for="task-notes">Notes: </label>
-            <input id="task-notes" type="text" placeholder="Do it with brush">
-
-            <label class="task-input-label" for="task-list">List: </label>
+            <label id="task-notes-label" class="task-input-label" for="task-notes">Notes: 
+                <input id="task-notes" type="text" placeholder="Do it with brush">
+            </label>
         `;
 
         const tasksContainer = document.getElementById('task-container');
