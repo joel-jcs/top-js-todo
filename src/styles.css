@@ -186,6 +186,83 @@ button {
     line-height: 15px;
 }
 
+#expanded-task-item {
+    display: grid;
+    grid-template-areas: 
+        "title priority"
+        "desc date"
+        "desc list"
+        "desc notes";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    justify-content: center;
+    align-content: center;
+    gap:30px;
+    width: 100%;
+    padding:30px 40px;
+    border:1px solid black;
+}
+
+#task-title-label {
+    grid-area: title;
+}
+
+#task-desc-label {
+    grid-area: desc;
+}
+
+#task-date-label {
+    grid-area: date;
+}
+
+#task-priority-label {
+    grid-area: priority;
+}
+
+#task-list-label {
+    grid-area: list;
+}
+
+#task-notes-label {
+    grid-area: notes;
+}
+
+#expanded-task-item label {
+    display:flex;
+    flex-direction: column;
+    width:100%;
+}
+
+#expanded-task-item input, #expanded-task-item select {
+    width: 80%;
+    height:40px;
+    border:none;
+    border-bottom:1px solid gray;
+    outline:none;
+    background-color: transparent;
+}
+
+#expanded-task-item select option {
+    background-color: var(--content-bg);
+    border:none;
+}
+
+#expanded-task-item  {
+    background-color: var(--content-bg);
+    border:none;
+}
+
+#task-desc {
+    height:260px;
+    width:80%;
+    border:none;
+    border-bottom:1px solid gray;
+    outline:none;
+    padding-top:20px;
+    background-color: transparent;
+    resize:none;
+}
+
 footer {
     height:40px;
     display:flex;
