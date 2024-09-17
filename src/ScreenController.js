@@ -38,17 +38,28 @@ const ScreenController = function () {
             listNameInput.addEventListener('keydown', (event) => {
                 if (event.key === "Enter") {
                     let newListName = listNameInput.value;
-                    listNameInput.remove();
                     createList(newListName);
                     loadLists();
                     addList();
                 }
-
+        
                 if (event.key === "Escape") {
-                    listNameInput.remove();
-                    listsContainer.appendChild(addListBtn);
+                    listNameInput.blur();
                 }
-            })
+            });
+
+            const focusOutHandler = () => {
+                removeListInput();
+            };
+            
+            const removeListInput = () => {
+                listNameInput.remove();
+                listNameInput = null;
+                listsContainer.appendChild(addListBtn);
+            };
+            
+            listNameInput.addEventListener('focusout', focusOutHandler);
+            
         });
     }
     
