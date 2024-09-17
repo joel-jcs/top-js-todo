@@ -1,3 +1,5 @@
+import { getProjects } from "./projectsManager.js";
+
 const ScreenController = (() => {
     const LoadProjects = () => {
     const projectContainer = document.createElement('div');
@@ -11,6 +13,11 @@ const ScreenController = (() => {
     </div>
     `;
 
+    //todo continue this one
+    // const projects = getProjects;
+    // projects.forEach(project => {
+    //     innerHTML += `<button class="list-item">${project}</button>`
+    // });
 
     return projectContainer;
     }
