@@ -1,4 +1,5 @@
 import { createList, getLists } from "./ListController.js";
+import { createTask, getTasks } from "./TaskController.js";
 
 const ScreenController = function () {
     const loadLists = () => {
@@ -47,26 +48,52 @@ const ScreenController = function () {
                     listNameInput.blur();
                 }
             });
-
-            const focusOutHandler = () => {
-                removeListInput();
-            };
-            
             const removeListInput = () => {
                 listNameInput.remove();
                 listNameInput = null;
                 listsContainer.appendChild(addListBtn);
             };
             
-            listNameInput.addEventListener('focusout', focusOutHandler);
-            
+            listNameInput.addEventListener('focusout', removeListInput);
+        });
+    }
+
+    const loadTasks = (list) => {
+        const contentContainer = document.getElementById('content-container');
+        contentContainer.innerHTML = '';
+
+        let contentHeading = document.createElement('h1');
+        contentHeading.id = "content-heading";
+        contentHeading.innerHTML = '';
+        contentHeading.innerText = list.name;
+        contentContainer.appendChild(contentHeading);
+
+        const tasksContainer = document.createElement('div');
+        tasksContainer.id = "task-container";
+        tasksContainer.innerHTML = '';
+        contentContainer.appendChild(tasksContainer);
+
+        const tasks = getTasks();
+        tasks.forEach(task => {
+            const taskItem = document.createElement('div');
+            taskItem.classList.add("task-item");
+            taskItem.innerHTML += `
+                <input type="checkbox" class="checkbox">
+                <div class="task-details-container">
+                    <label for="" class="task-label">${task.name}</label>
+                    <span class="task-desc">${task.description}</span>
+                </div>
+            `;
+
+            tasksContainer.appendChild(taskItem);
         });
     }
     
     return {
         loadLists,
         addList,
+        loadTasks,
     }
 };
 
-export const { loadLists, addList } = ScreenController();
+export const { loadLists, addList, loadTasks } = ScreenController();
