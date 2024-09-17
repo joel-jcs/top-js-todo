@@ -16,7 +16,7 @@ const ScreenController = function () {
             listsContainer.innerHTML += `<button class="list-item">${list.name}</button>`;
         });
 
-        listsContainer.innerHTML += `<button id="add-list-btn" class="list-item" type="button">Add List</button>`
+        listsContainer.innerHTML += `<button id="add-list-btn" class="list-item" type="button">+ Add List</button>`
 
         listsSection.appendChild(listsContainer);
     }
@@ -80,20 +80,69 @@ const ScreenController = function () {
             taskItem.innerHTML += `
                 <input type="checkbox" class="checkbox">
                 <div class="task-details-container">
-                    <label for="" class="task-label">${task.name}</label>
+                    <h3 class="task-name">${task.name}</h3>
                     <span class="task-desc">${task.description}</span>
                 </div>
             `;
 
             tasksContainer.appendChild(taskItem);
+
+            tasksContainer.innerHTML += `<button id="add-task-btn" class="task-item" type="button">+ Add Task</button>`
         });
     }
-    
-    return {
-        loadLists,
-        addList,
-        loadTasks,
+
+    const addTask = () => {
+        const addTaskBtn = document.getElementById('add-task-btn');
+        addTaskBtn.addEventListener('click', () => {
+            expandTask();
+        });
     }
+
+
+    // ${task.name ? task.name : ""}
+    // ${task.description ? task.description : ""}
+    // ${task.dueDate ? task.dueDate : ""}
+    // ${task.notes ? task.notes : ""}
+
+    const expandTask = (task) => {
+        const expandedTaskItem = document.createElement('div');
+        expandedTaskItem.id = "expanded-task-item";
+        expandedTaskItem.innerHTML = `
+            <label class="task-input-label" for="task-title">Title: </label>
+            <input id="task-title" type="text" placeholder="Pet my doggo"> 
+
+            <label class="task-input-label" for="task-desc">Description: </label>
+            <input id="task-desc" type="textarea" placeholder="Pet doggo on his belly, paws, etc."> 
+
+            <label class="task-input-label" for="task-date">Due Date: </label>
+            <input id="task-date" type="date">
+
+            <label class="task-input-label" for="task-priority">Priority: </label>
+            <select id="task-priority">
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+
+            <select id="task-list">
+                <option value="list1">List 1</option>
+                <option value="new-list">+ Create new list</option>
+            </select>
+
+            <label class="task-input-label" for="task-notes">Notes: </label>
+            <input id="task-notes" type="text" placeholder="Do it with brush">
+
+            <label class="task-input-label" for="task-list">List: </label>
+        `;
+
+        const tasksContainer = document.getElementById('task-container');
+        
+        if (!tasksContainer.querySelector(`#expanded-task-item`)) {
+            tasksContainer.appendChild(expandedTaskItem);    
+        }
+    }
+    
+    return { loadLists, addList, loadTasks, addTask, expandTask, }
 };
 
-export const { loadLists, addList, loadTasks } = ScreenController();
+export const { loadLists, addList, loadTasks, addTask, expandTask } = ScreenController();
