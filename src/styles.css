@@ -44,8 +44,8 @@ nav {
 }
 
 #nav-user-img {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     border: 1px solid red;
 }
@@ -123,6 +123,43 @@ button {
 #content-container {
     height: calc(100% - 60px);
     width:100%;
+}
+
+#task-container {
+    padding:4rem;
+    width: 100%;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap:10px;
+    width: 100%;
+    height: 50px;
+    padding:5px 10px;
+}
+
+.checkbox {
+    position: relative;
+    display: inline-block;
+  }
+
+.task-details-container {
+    display:flex;
+    flex-direction: column;
+    width:100%;
+    user-select: none;
+}
+
+.task-label {
+    font-weight: bold;
+    line-height: 20px;
+}
+
+.task-details-container > span {
+    font-size: 0.8rem;
+    color:rgb(177, 177, 177);
+    line-height: 15px;
 }
 
 footer {
