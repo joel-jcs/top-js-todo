@@ -1,31 +1,25 @@
-import { getProjects } from "./projectsManager.js";
+import { getLists } from "./listsManager.js";
 
-const ScreenController = (() => {
-    const LoadProjects = () => {
-    const projectContainer = document.createElement('div');
-    projectContainer.id = "project-container";
-    projectContainer.innerHTML = `
-    <h1 id="projects-heading">My Projects</h1>
-    <div id="projects-container">
-        <button class="list-item">project 1</button>
-        <button class="list-item">project 2</button>
-        <button class="list-item add-project-btn">Add Project</button>
-    </div>
-    `;
+const ScreenController = function () {
+    const loadLists = () => {
+        const listsContainer = document.createElement('div');
+        listsContainer.id = "lists-container";
 
-    //todo continue this one
-    // const projects = getProjects;
-    // projects.forEach(project => {
-    //     innerHTML += `<button class="list-item">${project}</button>`
-    // });
+        listsContainer.innerHTML = `<h1 id="lists-heading">My Lists</h1>`
 
-    return projectContainer;
+        const lists = getLists();
+        lists.forEach(list => {
+            listsContainer.innerHTML += `<button class="list-item">${list}</button>`
+        });
+
+        listsContainer.innerHTML += `<button id="add-list-btn" class="list-item">Add List</button>`
+
+        return listsContainer;
     }
     
     return {
-        LoadProjects,
+        loadLists,
     }
-})();
+};
 
-const { LoadProjects } = ScreenController;
-export { LoadProjects };
+export const { loadLists } = ScreenController();
