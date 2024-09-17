@@ -15,8 +15,18 @@ const ListController = () => {
 
     const getLists = () => lists;
 
+    
+    //TO-DO
     const getList = (id) => {
-        //pending
+
+    };
+
+    const updateList = (id) => {
+
+    };
+
+    const deleteList = (id) => {
+
     };
     
     return {
