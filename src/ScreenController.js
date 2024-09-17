@@ -1,4 +1,4 @@
-import { getLists } from "./listsManager.js";
+import { getLists } from "./ListController.js";
 
 const ScreenController = function () {
     const loadLists = () => {

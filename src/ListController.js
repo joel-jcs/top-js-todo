@@ -1,4 +1,4 @@
-const list = () => {
+const listController = () => {
     let lists = ["list 1", "list 2"];
 
     const createList = (listName) => {
@@ -25,4 +25,4 @@ const list = () => {
     }
 };
 
-export const { createList, getLists } = list();
+export const { createList, getLists } = listController();
