@@ -1,11 +1,11 @@
-const listController = () => {
-    let lists = ["list 1", "list 2"];
+const ListController = () => {
+    let lists = [];
 
-    const createList = (listName) => {
+    const createList = (listName, task) => {
         const list = {
-            // id: Date.now(), UPDATE WITH THE REQUIRED date-fns
+            id: Date.now(),
             name: listName,
-            tasks: [],
+            tasks: [task],
         }
 
         lists.push(list);
@@ -25,4 +25,4 @@ const listController = () => {
     }
 };
 
-export const { createList, getLists } = listController();
+export const { createList, getLists } = ListController();

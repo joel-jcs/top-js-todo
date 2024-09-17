@@ -7,6 +7,7 @@
     line-height: 1.6;
     transition:0.1s;
     color:white;
+    transition:0.1s;
 }
 
 :root {
@@ -104,6 +105,16 @@ nav {
 #add-list-btn {
     color:rgb(177, 177, 177);
     font-size:0.9rem;
+}
+
+#add-list-name {
+    width:90%;
+    height:40px;
+    border:none;
+    border-bottom:1px solid gray;
+    outline:none;
+    padding:0 10px;
+    background-color: transparent;
 }
 
 button {
