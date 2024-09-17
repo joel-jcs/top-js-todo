@@ -1,5 +1,5 @@
 import "./styles.css";
-import { LoadProjects } from "./screenController.js";
+import { loadLists } from "./screenController.js";
 
-const projectsSection = document.getElementById('projects-section');
-projectsSection.appendChild(LoadProjects());
+const myListsSection = document.getElementById('lists-section');
+myListsSection.appendChild(loadLists());
