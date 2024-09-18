@@ -80,8 +80,9 @@ const ScreenController = function () {
             taskItem.innerHTML += `
                 <input type="checkbox" class="checkbox">
                 <div class="task-details-container">
-                    <h3 class="task-name">${task.name}</h3>
-                    <span class="task-desc">${task.description}</span>
+                    <h3 class="task-name">${task.name? task.name : "Untitled"}</h3>
+                    <span class="task-date">${task.dueDate ? `Due Date: ${task.dueDate}` : ""}</span>
+                    <span class="task-priority">${task.priority? `Priority: ${task.priority}` : ""}</span>
                 </div>
             `;
 
@@ -107,8 +108,8 @@ const ScreenController = function () {
                 <input id="task-title" type="text" placeholder="Pet my doggo"> 
             </label>
 
-            <label id="task-desc-label" class="task-input-label" for="task-desc">Description: 
-                <textarea id="task-desc" wrap="soft" maxlength="450" placeholder="Belly rub first, brush back second... etc. (Max 450 characters) "></textarea> 
+            <label id="task-desc-label" class="task-input-label" for="expanded-task-desc">Description: 
+                <textarea id="expanded-task-desc" wrap="soft" maxlength="450" placeholder="Belly rub first, brush back second... etc. (Max 450 characters) "></textarea> 
             </label>
 
             <label id="task-date-label" class="task-input-label" for="task-date">Due Date: 
@@ -118,14 +119,15 @@ const ScreenController = function () {
             <label id="task-priority-label" class="task-input-label" for="task-priority">Priority: 
                 <select id="task-priority">
                     <option value="" selected>Select priority...</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                 </select>
             </label>
 
             <label id="task-list-label" class="task-input-label" for="task-list">List: 
             <select id="task-list">
+                <option value="" selected>Select a list...</option>
                 <option value="list1">List 1</option>
                 <option value="new-list">+ Create new list</option>
             </select>
@@ -149,7 +151,7 @@ const ScreenController = function () {
             
             if (task) {
                 document.getElementById('task-title').value = task.name;
-                document.getElementById('task-desc').value = task.description;
+                document.getElementById('expanded-task-desc').value = task.description;
                 document.getElementById('task-date').value = task.dueDate;
                 document.getElementById('task-priority').value = task.priority;
                 document.getElementById('task-list').value = task.list;
@@ -178,7 +180,7 @@ const ScreenController = function () {
         const saveTaskBtn = document.getElementById('save-task-btn');
         saveTaskBtn.addEventListener('click', () => {
             let name = document.getElementById('task-title').value;
-            let description = document.getElementById('task-desc').value;
+            let description = document.getElementById('expanded-task-desc').value;
             let dueDate = document.getElementById('task-date').value;
             let priority = document.getElementById('task-priority').value;
             let list = document.getElementById('task-list').value;
@@ -225,11 +227,11 @@ const ScreenController = function () {
                 expandTask(tasks[index]);
                 addTaskBtn.remove();
                 taskItem.remove();
-            })
+            });
         });
     }
     
-    return { loadLists, addList, loadTasks, addTask, viewTask, }
+    return { loadLists, addList, loadTasks, addTask, viewTask, };
 };
 
 export const { loadLists, addList, loadTasks, addTask, viewTask } = ScreenController();

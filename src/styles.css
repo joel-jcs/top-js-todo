@@ -254,7 +254,7 @@ button {
     border:none;
 }
 
-#task-desc {
+#expanded-task-desc {
     height:260px;
     border:none;
     border-bottom:1px solid gray;
