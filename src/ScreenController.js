@@ -1,5 +1,5 @@
-import { createList, getLists } from "./ListController.js";
-import { createTask, getTasks } from "./TaskController.js";
+import ListController from "./ListController.js";
+import TaskController from "./TaskController.js";
 
 const ScreenController = function () {
     const loadLists = () => {
@@ -11,7 +11,7 @@ const ScreenController = function () {
 
         listsContainer.innerHTML = `<h1 id="lists-heading">My Lists</h1>`
 
-        const lists = getLists();
+        const lists = ListController.getLists();
         lists.forEach(list => {
             listsContainer.innerHTML += `<button class="list-item">${list.name}</button>`;
         });
@@ -39,7 +39,7 @@ const ScreenController = function () {
             listNameInput.addEventListener('keydown', (event) => {
                 if (event.key === "Enter") {
                     let newListName = listNameInput.value;
-                    createList(newListName);
+                    ListController.createList(newListName);
                     loadLists();
                     addList();
                 }
@@ -73,7 +73,7 @@ const ScreenController = function () {
         tasksContainer.innerHTML = '';
         contentContainer.appendChild(tasksContainer);
 
-        const tasks = getTasks();
+        const tasks = TaskController.getTasks();
         tasks.forEach(task => {
             const taskItem = document.createElement('div');
             taskItem.classList.add("task-item");
@@ -98,6 +98,7 @@ const ScreenController = function () {
         });
     }
 
+    //TO-DO: turn ExpandTask into a popup instead
     const expandTask = (task) => {
         let expandedTaskItem = document.createElement('div');
         expandedTaskItem.id = "expanded-task-item";
@@ -140,12 +141,11 @@ const ScreenController = function () {
             </div>
             `;
 
+            // lower priority: fix issue where clicking on add task and then 
+            // clicking on another task will not show the existing task's info
         const tasksContainer = document.getElementById('task-container');
-        
         if (!tasksContainer.querySelector(`#expanded-task-item`)) {
             tasksContainer.appendChild(expandedTaskItem);
-            saveTask();
-            cancelTask();
             
             if (task) {
                 document.getElementById('task-title').value = task.name;
@@ -154,7 +154,12 @@ const ScreenController = function () {
                 document.getElementById('task-priority').value = task.priority;
                 document.getElementById('task-list').value = task.list;
                 document.getElementById('task-notes').value = task.notes;
+                saveTask(task.id);
+                // TaskController.deleteTask();
+            } else {
+                saveTask();
             }
+            cancelTask();
         }
 
         return expandedTaskItem;
@@ -168,7 +173,7 @@ const ScreenController = function () {
         viewTask();
     };
 
-    const saveTask = () => {
+    const saveTask = (taskId) => {
         const saveTaskBtn = document.getElementById('save-task-btn');
         saveTaskBtn.addEventListener('click', () => {
             let name = document.getElementById('task-title').value;
@@ -177,8 +182,11 @@ const ScreenController = function () {
             let priority = document.getElementById('task-priority').value;
             let list = document.getElementById('task-list').value;
             let notes = document.getElementById('task-notes').value;
-
-            createTask(name, description, dueDate, priority, notes, list);
+            if (taskId) {
+                TaskController.updateTask(taskId, name, description, dueDate, priority, notes, list);
+            } else {
+                TaskController.createTask(name, description, dueDate, priority, notes, list);
+            }
             
             resetExpandedTask();
         });
@@ -190,9 +198,9 @@ const ScreenController = function () {
             resetExpandedTask();
         });
     }
-
+    
     const viewTask = () => {
-        const tasks = getTasks();
+        const tasks = TaskController.getTasks();
         const taskItems = document.querySelectorAll('.task-item');
         const addTaskBtn = document.getElementById('add-task-btn');
         taskItems.forEach((taskItem, index) => {

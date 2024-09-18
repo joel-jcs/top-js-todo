@@ -6,7 +6,7 @@ const TaskController = () => {
             description: "at the mall",
             dueDate: "2022-09-20",
             priority: "high",
-            list: "List 1",
+            list: "list1",
             notes: "text for notes",
         }
     ];
@@ -24,28 +24,32 @@ const TaskController = () => {
 
         tasks.push(task);
         console.log(task);
-        console.log(tasks)
+        console.table(tasks)
         
         return task;
     }
 
     const getTasks = () => tasks;
 
-    
-    //TO-DO
+    const updateTask = (id, name, description, dueDate, priority, notes, list) => {
+        console.table(tasks);
+        let taskToUpdate = tasks.find(task => task.id === id);
+        taskToUpdate.name = name;
+        taskToUpdate.description = description;
+        taskToUpdate.dueDate = dueDate;
+        taskToUpdate.priority = priority;
+        taskToUpdate.notes = notes;
+        taskToUpdate.list = list;
 
-    const updateTask = (id) => {
-
+        console.table(tasks);
+        return taskToUpdate;
     };
 
     const deleteTask = (id) => {
 
     };
     
-    return {
-        createTask,
-        getTasks,
-    }
+    return { createTask, getTasks, updateTask, deleteTask };
 };
 
-export const { createTask, getTasks } = TaskController();
+export default TaskController();

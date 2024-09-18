@@ -35,4 +35,4 @@ const ListController = () => {
     }
 };
 
-export const { createList, getLists } = ListController();
+export default ListController();
