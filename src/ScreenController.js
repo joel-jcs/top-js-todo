@@ -144,6 +144,9 @@ const ScreenController = function () {
         
         if (!tasksContainer.querySelector(`#expanded-task-item`)) {
             tasksContainer.appendChild(expandedTaskItem);
+            saveTask();
+            cancelTask();
+            
             if (task) {
                 document.getElementById('task-title').value = task.name;
                 document.getElementById('task-desc').value = task.description;
@@ -153,9 +156,6 @@ const ScreenController = function () {
                 document.getElementById('task-notes').value = task.notes;
             }
         }
-
-        saveTask();
-        cancelTask();
 
         return expandedTaskItem;
     }
@@ -179,7 +179,6 @@ const ScreenController = function () {
             let notes = document.getElementById('task-notes').value;
 
             createTask(name, description, dueDate, priority, notes, list);
-            loadTasks("Today");
             
             resetExpandedTask();
         });
@@ -195,11 +194,11 @@ const ScreenController = function () {
     const viewTask = () => {
         const tasks = getTasks();
         const taskItems = document.querySelectorAll('.task-item');
+        const addTaskBtn = document.getElementById('add-task-btn');
         taskItems.forEach((taskItem, index) => {
             taskItem.addEventListener('click', () => {
                 expandTask(tasks[index]);
-                // const addTaskBtn = document.getElementById('add-task-btn');
-                // addTaskBtn.remove();
+                addTaskBtn.remove();
                 taskItem.remove();
             })
         });

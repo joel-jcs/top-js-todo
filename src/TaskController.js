@@ -24,6 +24,7 @@ const TaskController = () => {
 
         tasks.push(task);
         console.log(task);
+        console.log(tasks)
         
         return task;
     }
@@ -32,9 +33,6 @@ const TaskController = () => {
 
     
     //TO-DO
-    const getTask = (id) => {
-
-    };
 
     const updateTask = (id) => {
 
