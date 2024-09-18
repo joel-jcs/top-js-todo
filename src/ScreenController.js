@@ -94,13 +94,13 @@ const ScreenController = function () {
     const addTask = () => {
         const addTaskBtn = document.getElementById('add-task-btn');
         addTaskBtn.addEventListener('click', () => {
-            addTaskBtn.remove();
             expandTask();
         });
     }
 
     //TO-DO: turn ExpandTask into a popup instead
     const expandTask = (task) => {
+
         let expandedTaskItem = document.createElement('div');
         expandedTaskItem.id = "expanded-task-item";
         expandedTaskItem.innerHTML = `
@@ -145,9 +145,11 @@ const ScreenController = function () {
 
             // lower priority: fix issue where clicking on add task and then 
             // clicking on another task will not show the existing task's info
-        const tasksContainer = document.getElementById('task-container');
-        if (!tasksContainer.querySelector(`#expanded-task-item`)) {
-            tasksContainer.appendChild(expandedTaskItem);
+            
+        const contentContainer = document.getElementById('content-container');
+
+        if (!contentContainer.querySelector(`#expanded-task-item`)) {
+            contentContainer.appendChild(expandedTaskItem);
             
             if (task) {
                 document.getElementById('task-title').value = task.name;
@@ -221,12 +223,9 @@ const ScreenController = function () {
     const viewTask = () => {
         const tasks = TaskController.getTasks();
         const taskItems = document.querySelectorAll('.task-item');
-        const addTaskBtn = document.getElementById('add-task-btn');
         taskItems.forEach((taskItem, index) => {
             taskItem.addEventListener('click', () => {
                 expandTask(tasks[index]);
-                addTaskBtn.remove();
-                taskItem.remove();
             });
         });
     }
