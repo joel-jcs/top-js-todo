@@ -154,12 +154,13 @@ const ScreenController = function () {
                 document.getElementById('task-priority').value = task.priority;
                 document.getElementById('task-list').value = task.list;
                 document.getElementById('task-notes').value = task.notes;
-                saveTask(task.id);
-                // TaskController.deleteTask();
+
+                saveTaskListener(task.id);
+                deleteTaskListener(task.id);
             } else {
-                saveTask();
+                saveTaskListener();
             }
-            cancelTask();
+            cancelTaskListener();
         }
 
         return expandedTaskItem;
@@ -173,7 +174,7 @@ const ScreenController = function () {
         viewTask();
     };
 
-    const saveTask = (taskId) => {
+    const saveTaskListener = (taskId) => {
         const saveTaskBtn = document.getElementById('save-task-btn');
         saveTaskBtn.addEventListener('click', () => {
             let name = document.getElementById('task-title').value;
@@ -192,7 +193,23 @@ const ScreenController = function () {
         });
     }
 
-    const cancelTask = () => {
+    const deleteTaskListener = (taskId) => {
+        const taskBtnContainer = document.getElementById('task-btn-container');
+        const cancelTaskBtn = document.getElementById('cancel-task-btn');
+        const deleteTaskBtn = document.createElement('button');
+        deleteTaskBtn.id = 'delete-task-btn';
+        deleteTaskBtn.type = 'button';
+        deleteTaskBtn.classList.add('task-btn');
+        deleteTaskBtn.textContent = 'Delete Task';
+        taskBtnContainer.insertBefore(deleteTaskBtn, cancelTaskBtn);
+
+        deleteTaskBtn.addEventListener('click', () => {
+            TaskController.deleteTask(taskId);
+            resetExpandedTask();
+        });
+    }
+
+    const cancelTaskListener = () => {
         const cancelTaskBtn = document.getElementById('cancel-task-btn');
         cancelTaskBtn.addEventListener('click', () => {
             resetExpandedTask();
