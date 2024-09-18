@@ -189,21 +189,25 @@ button {
 #expanded-task-item {
     display: grid;
     grid-template-areas: 
-        "title priority"
-        "desc date"
+        "title date"
+        "desc priority"
         "desc list"
         "desc notes"
         "... taskBtns";
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     justify-content: center;
-    align-content: center;
+    align-items: center;
     gap:30px;
-    width: 100%;
-    padding:30px 10px;
-    border:1px solid black;
+    width: 95%;
+    height:100%;
+    margin:0 auto;
+    padding:40px 30px;
+    margin-top:1rem;
+    border:1px solid gray;
+    border-radius: 10px;
     background-color: var(--content-bg);
-    border:none;
+    /* background-color: red; */
 }
 
 #task-title-label {
@@ -231,13 +235,13 @@ button {
 }
 
 #expanded-task-item label {
-    display:flex;
+    display: flex;
     flex-direction: column;
-    width:100%;
+    width: 80%;
+    margin: 0 auto;
 }
 
 #expanded-task-item input, #expanded-task-item select {
-    width: 80%;
     height:40px;
     border:none;
     border-bottom:1px solid gray;
@@ -252,7 +256,6 @@ button {
 
 #task-desc {
     height:260px;
-    width:80%;
     border:none;
     border-bottom:1px solid gray;
     outline:none;
@@ -267,7 +270,7 @@ button {
     justify-content: flex-end;
     align-items: center;
     gap:20px;
-    width:80%;
+    width:90%;
     height:60px;
 }
 
