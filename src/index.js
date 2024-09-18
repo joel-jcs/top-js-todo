@@ -1,9 +1,10 @@
 import "./styles.css";
-import { loadLists, addList, loadTasks, addTask, viewTask } from "./ScreenController.js";
+import ScreenController from "./ScreenController.js";
 
-loadLists();
-addList();
+ScreenController.loadLists();
+ScreenController.addList();
+ScreenController.viewList();
 
-loadTasks("Today");
-addTask();
-viewTask();
+ScreenController.loadTasks("Today");
+ScreenController.addTaskListener();
+ScreenController.viewTask();

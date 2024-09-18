@@ -29,7 +29,13 @@ const TaskController = () => {
         return task;
     }
 
-    const getTasks = () => tasks;
+    const getTasks = (listId) => {
+        if (listId) {
+            return tasks.filter(task => task.list === listId);
+        } else {
+            return tasks;
+        }
+    };
 
     const updateTask = (id, name, description, dueDate, priority, notes, list) => {
         console.table(tasks);

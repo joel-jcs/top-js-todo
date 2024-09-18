@@ -9,6 +9,7 @@ const ListController = () => {
         }
 
         lists.push(list);
+        console.table(lists);
         
         return list;
     }

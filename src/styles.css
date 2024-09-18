@@ -69,17 +69,6 @@ nav {
     margin-bottom:20px;
 }
 
-.list-item {
-    background:none;
-    width:100%;
-    padding: 10px 20px 10px 20px;
-    text-align: left;
-}
-
-.list-item:hover {
-    opacity:0.6;
-}   
-
 #lists-section {
     display: flex;
     flex-direction: column;
@@ -101,6 +90,17 @@ nav {
     gap:10px;
     width:100%;
 }
+
+.default-list-item, .list-item, #add-list-btn {
+    background:none;
+    width:100%;
+    padding: 10px 20px 10px 20px;
+    text-align: left;
+}
+
+.default-list-item:hover, .list-item:hover, #add-list-btn:hover {
+    opacity:0.6;
+} 
 
 #add-list-btn {
     color:rgb(177, 177, 177);
