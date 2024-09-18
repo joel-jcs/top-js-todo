@@ -192,15 +192,18 @@ button {
         "title priority"
         "desc date"
         "desc list"
-        "desc notes";
+        "desc notes"
+        "... taskBtns";
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     justify-content: center;
     align-content: center;
     gap:30px;
     width: 100%;
-    padding:30px 40px;
+    padding:30px 10px;
     border:1px solid black;
+    background-color: var(--content-bg);
+    border:none;
 }
 
 #task-title-label {
@@ -247,11 +250,6 @@ button {
     border:none;
 }
 
-#expanded-task-item  {
-    background-color: var(--content-bg);
-    border:none;
-}
-
 #task-desc {
     height:260px;
     width:80%;
@@ -261,6 +259,35 @@ button {
     padding-top:20px;
     background-color: transparent;
     resize:none;
+}
+
+#task-btn-container {
+    grid-area:taskBtns;
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap:20px;
+    width:80%;
+    height:60px;
+}
+
+.task-btn {
+    border:none;
+    background:rgb(136, 136, 136);
+    cursor:pointer;
+    border-radius: 5px;
+    padding:5px 10px;
+    font-weight: bold;
+    width:100px;
+    height:40px;
+}
+
+#save-task-btn {
+    background-color: #65c05c;
+}
+
+#cancel-task-btn {
+    background-color: rgb(192, 66, 66);
 }
 
 footer {

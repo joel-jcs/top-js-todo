@@ -23,6 +23,7 @@ const TaskController = () => {
         }
 
         tasks.push(task);
+        console.log(task);
         
         return task;
     }

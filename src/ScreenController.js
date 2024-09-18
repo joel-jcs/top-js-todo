@@ -86,9 +86,8 @@ const ScreenController = function () {
             `;
 
             tasksContainer.appendChild(taskItem);
-
-            tasksContainer.innerHTML += `<button id="add-task-btn" class="task-item" type="button">+ Add Task</button>`
         });
+        tasksContainer.innerHTML += `<button id="add-task-btn" class="task-item" type="button">+ Add Task</button>`
     }
 
     const addTask = () => {
@@ -96,8 +95,9 @@ const ScreenController = function () {
         addTaskBtn.addEventListener('click', () => {
             expandTask();
         });
-    }
 
+        
+    }
 
     // ${task.name ? task.name : ""}
     // ${task.description ? task.description : ""}
@@ -105,15 +105,18 @@ const ScreenController = function () {
     // ${task.notes ? task.notes : ""}
 
     const expandTask = (task) => {
-        const expandedTaskItem = document.createElement('div');
+        const addTaskBtn = document.getElementById('add-task-btn');
+        addTaskBtn.remove();
+
+        let expandedTaskItem = document.createElement('div');
         expandedTaskItem.id = "expanded-task-item";
         expandedTaskItem.innerHTML = `
             <label id="task-title-label" class="task-input-label" for="task-title">Title: 
-                <input id="task-title" type="text" placeholder="Pet my doggo"> 
+                <input id="task-title" type="text" placeholder="Pet my doggo" required> 
             </label>
 
             <label id="task-desc-label" class="task-input-label" for="task-desc">Description: 
-                <textarea id="task-desc" wrap="soft" maxlength="450" placeholder="First do the belly... etc. (Max 450 characters) "></textarea> 
+                <textarea id="task-desc" wrap="soft" maxlength="450" placeholder="Belly rub first, brush back second... etc. (Max 450 characters) "></textarea> 
             </label>
 
             <label id="task-date-label" class="task-input-label" for="task-date">Due Date: 
@@ -122,6 +125,7 @@ const ScreenController = function () {
 
             <label id="task-priority-label" class="task-input-label" for="task-priority">Priority: 
                 <select id="task-priority">
+                    <option value="" selected>Select priority...</option>
                     <option value="high">High</option>
                     <option value="medium">Medium</option>
                     <option value="low">Low</option>
@@ -136,15 +140,42 @@ const ScreenController = function () {
             </label>
 
             <label id="task-notes-label" class="task-input-label" for="task-notes">Notes: 
-                <input id="task-notes" type="text" placeholder="Do it with brush">
+                <input id="task-notes" type="text" placeholder="Remember to trim nails">
             </label>
+
+            <div id="task-btn-container">
+                <button id="save-task-btn" class="task-btn" type="button">Save Task</button>
+                <button id="cancel-task-btn" class="task-btn" type="button">Cancel</button>
+            </div>
         `;
 
         const tasksContainer = document.getElementById('task-container');
         
         if (!tasksContainer.querySelector(`#expanded-task-item`)) {
-            tasksContainer.appendChild(expandedTaskItem);    
+            tasksContainer.appendChild(expandedTaskItem);
         }
+
+        const saveTaskBtn = document.getElementById('save-task-btn');
+        saveTaskBtn.addEventListener('click', () => {
+            let name = document.getElementById('task-title').value;
+            let description = document.getElementById('task-desc').value;
+            let dueDate = document.getElementById('task-date').value;
+            let priority = document.getElementById('task-priority').value;
+            let list = document.getElementById('task-list').value;
+            let notes = document.getElementById('task-notes').value;            
+            
+            createTask(name, description, dueDate, priority, notes, list);
+            loadTasks("Today");
+            addTask();
+        });
+
+        const cancelTaskBtn = document.getElementById('cancel-task-btn');
+        cancelTaskBtn.addEventListener('click', () => {
+            expandedTaskItem.remove();
+            tasksContainer.appendChild(addTaskBtn);
+        });
+
+        return expandedTaskItem;
     }
     
     return { loadLists, addList, loadTasks, addTask, expandTask, }
