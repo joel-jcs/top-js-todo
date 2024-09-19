@@ -22,19 +22,6 @@ const ScreenController = function () {
         listsSection.appendChild(listsContainer);
     }
 
-    const reloadTaskView = (list) => {
-        loadTasks(list);
-        EventController.viewTask(list);
-        EventController.addTask(list);
-        EventController.editOrDeleteList(list);
-    }
-
-    const reloadNavLists = () => {
-        loadLists();
-        EventController.addList();
-        EventController.openList();
-    }
-
     const loadTasks = (listItem) => {
         const contentContainer = document.getElementById('content-container');
         contentContainer.innerHTML = '';
@@ -68,8 +55,6 @@ const ScreenController = function () {
             tasksContainer.appendChild(taskItem);
         });
         tasksContainer.innerHTML += `<button id="add-task-btn" class="task-item" type="button">+ Add Task</button>`
-        
-        EventController.addTask(listItem);
     }
 
     const taskWindowTemplate = () => {
@@ -147,11 +132,8 @@ const ScreenController = function () {
 
     return {
         loadLists, 
-        reloadNavLists, 
-        reloadTaskView, 
         loadTasks,
         openTaskWindow,
-        reloadTaskView,
     };
 };
 
