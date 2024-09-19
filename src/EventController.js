@@ -143,7 +143,7 @@ const EventController = () => {
 
     const viewTask = (currentList) => {
         const tasksFilteredByList = TaskController.getTasks(currentList.id);
-        const taskItems = document.querySelectorAll('.task-item');
+        const taskItems = document.querySelectorAll('.task-details-container');
 
         taskItems.forEach((taskItem, index) => {
             taskItem.addEventListener('click', () => {
@@ -153,8 +153,8 @@ const EventController = () => {
     }
 
     const closeTask = (currentList) => {
-        const cancelTaskBtn = document.getElementById('cancel-task-btn');
-        cancelTaskBtn.addEventListener('click', () => {
+        const closeTaskBtn = document.getElementById('close-task-btn');
+        closeTaskBtn.addEventListener('click', () => {
             ScreenController.loadTasks(currentList);
             loadEventListeners(currentList);
         });
@@ -181,15 +181,40 @@ const EventController = () => {
         });
     }
 
+    const completeTask = (currentList, openedTask) => {
+        const completeTaskBtn = document.getElementById('complete-task-btn');
+        completeTaskBtn.addEventListener('click', () => {
+            TaskController.completeTask(openedTask.id);
+            completeTaskBtn.textContent = completeTaskBtn.textContent === 'Mark Complete' ? 'Completed' : 'Mark Complete';
+            completeTaskBtn.style.backgroundColor = completeTaskBtn.style.backgroundColor === "gray" ? "green" : "gray";
+            ScreenController.loadTasks(currentList);
+            loadEventListeners(currentList);
+            console.log(openedTask);
+        });
+    };
+
+    const taskCompleteCheckbox = (currentList) => {
+        const taskCheckboxes = document.querySelectorAll('.checkbox');
+        taskCheckboxes.forEach((checkbox, index) => {
+            const task = TaskController.getTasks(currentList.id)[index];
+            checkbox.addEventListener('click', () => {
+                TaskController.completeTask(task.id);
+                ScreenController.loadTasks(currentList);
+                loadEventListeners(currentList);
+                console.log(task);
+            })            
+        });
+    }
+
     const deleteTask = (currentList, openedTask) => {
         const taskBtnContainer = document.getElementById('task-btn-container');
-        const cancelTaskBtn = document.getElementById('cancel-task-btn');
+        const closeTaskBtn = document.getElementById('close-task-btn');
         const deleteTaskBtn = document.createElement('button');
         deleteTaskBtn.id = 'delete-task-btn';
         deleteTaskBtn.type = 'button';
         deleteTaskBtn.classList.add('task-btn');
         deleteTaskBtn.textContent = 'Delete Task';
-        taskBtnContainer.insertBefore(deleteTaskBtn, cancelTaskBtn);
+        taskBtnContainer.insertBefore(deleteTaskBtn, closeTaskBtn);
 
         deleteTaskBtn.addEventListener('click', () => {
             TaskController.deleteTask(openedTask.id);
@@ -204,6 +229,7 @@ const EventController = () => {
         openList();
         viewTask(list);
         addTask(list);
+        taskCompleteCheckbox(list);
         editOrDeleteList(list);
     };
 
@@ -215,6 +241,8 @@ const EventController = () => {
         viewTask, 
         closeTask,
         saveTask,
+        completeTask,
+        taskCompleteCheckbox,
         deleteTask,
         loadEventListeners,
     };
