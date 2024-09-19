@@ -57,12 +57,20 @@ const TaskController = () => {
         return taskToUpdate;
     };
 
+    const editListNameInTasks = (id, name) => {
+        tasks.forEach(task => {
+            if (task.list.id === id) {
+                task.list.name = name;
+            }
+        });
+    };
+
     const deleteTask = (id) => {
         let taskToDelete = tasks.find(task => task.id === id);
         tasks.splice(tasks.indexOf(taskToDelete), 1);
     };
-    
-    return { createTask, getTasks, updateTask, deleteTask };
+
+    return { createTask, getTasks, updateTask, editListNameInTasks, deleteTask };
 };
 
 export default TaskController();

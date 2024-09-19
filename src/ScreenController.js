@@ -133,8 +133,6 @@ const ScreenController = function () {
         const listItems = ListController.getLists();
 
         listTitle.addEventListener('click', () => {
-            console.log("working")
-
             let editListContainer = document.createElement('div');
             editListContainer.id = "edit-list-container";
 
@@ -172,9 +170,14 @@ const ScreenController = function () {
             // escape or click elsewhere to cancel
             editListNameInput.addEventListener('keydown', (event) => {
                 if (event.key === "Enter") {
-                    // let newListName = editListNameInput.value ? listNameInput.value : "Untitled List";
-                    // ListController.createList(newListName);
-                    // reloadLists();
+                    if (editListNameInput.value) {
+                        ListController.editListName(listItem.id, editListNameInput.value);
+                        loadTasks(listItem);
+                        reloadLists();
+                        resetExpandedTask(listItem);
+                    } else {
+                        removeEditListContainer();
+                    }
                 }
         
                 if (event.key === "Escape") {
