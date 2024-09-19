@@ -1,7 +1,7 @@
 const TaskController = () => {
     let tasks = [
         {
-            id: 12345,
+            id: 67890,
             name: "go shopping",
             description: "at the mall",
             dueDate: "2022-09-20",
@@ -11,6 +11,7 @@ const TaskController = () => {
                 name: "My First List",
             },
             notes: "text for notes",
+            completed: false,
         }
     ];
 
@@ -57,6 +58,11 @@ const TaskController = () => {
         return taskToUpdate;
     };
 
+    const completeTask = (id) => {
+        let taskToComplete = tasks.find(task => task.id === id);
+        taskToComplete.completed = !taskToComplete.completed;
+    };
+
     const editListNameInTasks = (id, name) => {
         tasks.forEach(task => {
             if (task.list.id === id) {
@@ -70,7 +76,14 @@ const TaskController = () => {
         tasks.splice(tasks.indexOf(taskToDelete), 1);
     };
 
-    return { createTask, getTasks, updateTask, editListNameInTasks, deleteTask };
+    return { 
+        createTask, 
+        getTasks, 
+        updateTask, 
+        completeTask, 
+        editListNameInTasks, 
+        deleteTask,
+    };
 };
 
 export default TaskController();

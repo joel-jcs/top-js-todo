@@ -43,15 +43,21 @@ const ScreenController = function () {
         const tasks = TaskController.getTasks(selectedList.id);
         tasks.forEach(task => {
             const taskItem = document.createElement('div');
+            let isTaskCompleted = task.completed;
             taskItem.classList.add("task-item");
             taskItem.innerHTML += `
-                <input type="checkbox" class="checkbox">
+                <input type="checkbox" class="checkbox" ${isTaskCompleted ? "checked" : ""}>
                 <div class="task-details-container">
                     <h3 class="task-name">${task.name? task.name : "Untitled Task"}</h3>
                     <span class="task-date">${task.dueDate ? `Due Date: ${task.dueDate}` : ""}</span>
                     <span class="task-priority">${task.priority? `Priority: ${task.priority}` : ""}</span>
                 </div>
             `;
+
+            if (isTaskCompleted) {
+                taskItem.classList.add("task-completed");
+            }
+
             tasksContainer.appendChild(taskItem);
         });
         tasksContainer.innerHTML += `<button id="add-task-btn" class="task-item" type="button">+ Add Task</button>`
@@ -62,6 +68,7 @@ const ScreenController = function () {
 
         let taskWindow = document.createElement('div');
         taskWindow.id = "task-window";
+        taskWindow.style.boxShadow = "3px 3px 10px rgba(0, 0, 0, 0.5)";
         taskWindow.innerHTML = `
             <label id="task-title-label" class="task-input-label" for="task-title">Title: 
                 <input id="task-title" type="text" placeholder="Pet my doggo"> 
@@ -93,8 +100,9 @@ const ScreenController = function () {
             </label>
 
             <div id="task-btn-container">
+                <button id="complete-task-btn" class="task-btn" type="button">Mark Complete</button>
                 <button id="save-task-btn" class="task-btn" type="button">Save Task</button>
-                <button id="cancel-task-btn" class="task-btn" type="button">Cancel</button>
+                <button id="close-task-btn" class="task-btn" type="button">Close</button>
             </div>
             `;
         return taskWindow;
@@ -119,10 +127,13 @@ const ScreenController = function () {
                 document.getElementById('task-priority').value = existingTask.priority;
                 document.getElementById('task-list').value = existingTask.list;
                 document.getElementById('task-notes').value = existingTask.notes;
+                document.getElementById('complete-task-btn').textContent = existingTask.completed ? 'Completed' : 'Mark Complete';
+                document.getElementById('complete-task-btn').style.backgroundColor = existingTask.completed ? "green" : "gray";
 
                 EventController.saveTask(currentList, existingTask);
+                EventController.completeTask(currentList, existingTask);
                 EventController.deleteTask(currentList, existingTask);
-            } else { //new task, didnt exist before
+            } else { //new task
                 EventController.saveTask(currentList);
             }
             EventController.closeTask(currentList);
