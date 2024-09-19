@@ -24,7 +24,7 @@ const ScreenController = function () {
 
     const reloadTaskView = (list) => {
         loadTasks(list);
-        viewTask(list);
+        EventController.viewTask(list);
         EventController.addTask(list);
         EventController.editOrDeleteList(list);
     }
@@ -135,80 +135,24 @@ const ScreenController = function () {
                 document.getElementById('task-list').value = task.list;
                 document.getElementById('task-notes').value = task.notes;
 
-                saveTaskListener(listItem, task);
-                deleteTaskListener(listItem, task);
+                EventController.saveTask(listItem, task);
+                EventController.deleteTask(listItem, task);
             } else { //new task, didnt exist before
-                saveTaskListener(listItem);
+                EventController.saveTask(listItem);
             }
-            cancelTaskListener(listItem);
+            EventController.closeTask(listItem);
         }
-
         return taskWindow;
     }
 
-    const closeTaskWindow = (listItem) => {
-        loadTasks(listItem);
-        EventController.addTask(listItem);
-        viewTask(listItem);
-        EventController.editOrDeleteList(listItem);
+    return {
+        loadLists, 
+        reloadNavLists, 
+        reloadTaskView, 
+        loadTasks,
+        openTaskWindow,
+        reloadTaskView,
     };
-
-    const saveTaskListener = (listItem, task) => {
-        let newTask = null;
-        const saveTaskBtn = document.getElementById('save-task-btn');
-        saveTaskBtn.addEventListener('click', () => {
-            let name = document.getElementById('task-title').value;
-            let description = document.getElementById('task-window-desc').value;
-            let dueDate = document.getElementById('task-date').value;
-            let priority = document.getElementById('task-priority').value;
-            let notes = document.getElementById('task-notes').value;
-            if (task) {
-                task = TaskController.updateTask(task.id, name, description, dueDate, priority, notes, listItem);
-            } else {
-                newTask = TaskController.createTask(name, description, dueDate, priority, notes, listItem);
-            }
-
-            ListController.addTaskToList(listItem.id, task ? task : newTask);
-            
-            closeTaskWindow(listItem);
-        });
-    }
-
-    const deleteTaskListener = (listItem, task) => {
-        const taskBtnContainer = document.getElementById('task-btn-container');
-        const cancelTaskBtn = document.getElementById('cancel-task-btn');
-        const deleteTaskBtn = document.createElement('button');
-        deleteTaskBtn.id = 'delete-task-btn';
-        deleteTaskBtn.type = 'button';
-        deleteTaskBtn.classList.add('task-btn');
-        deleteTaskBtn.textContent = 'Delete Task';
-        taskBtnContainer.insertBefore(deleteTaskBtn, cancelTaskBtn);
-
-        deleteTaskBtn.addEventListener('click', () => {
-            TaskController.deleteTask(task.id);
-            ListController.deleteTaskFromList(listItem.id, task);
-            closeTaskWindow(listItem);
-        });
-    }
-
-    const cancelTaskListener = (listItem) => {
-        const cancelTaskBtn = document.getElementById('cancel-task-btn');
-        cancelTaskBtn.addEventListener('click', () => {
-            closeTaskWindow(listItem);
-        });
-    }
-    
-    const viewTask = (listItem) => {
-        const tasks = TaskController.getTasks(listItem.id);
-        const taskItems = document.querySelectorAll('.task-item');
-        taskItems.forEach((taskItem, index) => {
-            taskItem.addEventListener('click', () => {
-                openTaskWindow(listItem, tasks[index]);
-            });
-        });
-    }
-    
-    return { loadLists, reloadNavLists, reloadTaskView, loadTasks, openTaskWindow, closeTaskWindow, viewTask, };
 };
 
 export default ScreenController();

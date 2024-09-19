@@ -1,4 +1,5 @@
 import ScreenController from "./ScreenController";
+import TaskController from "./TaskController";
 import ListController from "./ListController";
 
 const EventController = () => {
@@ -51,7 +52,6 @@ const EventController = () => {
     const openList = () => {
         const listItems = document.querySelectorAll('.list-item');
         const lists = ListController.getLists();
-        let listIndex;
         listItems.forEach((listItem, index) => {
             listItem.addEventListener('click', () => {
                 ScreenController.reloadNavLists();
@@ -105,7 +105,7 @@ const EventController = () => {
                         ListController.editListName(listItem.id, editListNameInput.value);
                         ScreenController.loadTasks(listItem);
                         ScreenController.reloadNavLists();
-                        ScreenController.closeTaskWindow(listItem);
+                        ScreenController.reloadTaskView(listItem);
                     } else {
                         removeEditListContainer();
                     }
@@ -144,8 +144,53 @@ const EventController = () => {
         const taskItems = document.querySelectorAll('.task-item');
         taskItems.forEach((taskItem, index) => {
             taskItem.addEventListener('click', () => {
-                openTaskWindow(listItem, tasks[index]);
+                ScreenController.openTaskWindow(listItem, tasks[index]);
             });
+        });
+    }
+
+    const closeTask = (listItem) => {
+        const cancelTaskBtn = document.getElementById('cancel-task-btn');
+        cancelTaskBtn.addEventListener('click', () => {
+            ScreenController.reloadTaskView(listItem);
+        });
+    }
+
+    const saveTask = (listItem, task) => {
+        let newTask = null;
+        const saveTaskBtn = document.getElementById('save-task-btn');
+        saveTaskBtn.addEventListener('click', () => {
+            let name = document.getElementById('task-title').value;
+            let description = document.getElementById('task-window-desc').value;
+            let dueDate = document.getElementById('task-date').value;
+            let priority = document.getElementById('task-priority').value;
+            let notes = document.getElementById('task-notes').value;
+            if (task) {
+                task = TaskController.updateTask(task.id, name, description, dueDate, priority, notes, listItem);
+            } else {
+                newTask = TaskController.createTask(name, description, dueDate, priority, notes, listItem);
+            }
+
+            ListController.addTaskToList(listItem.id, task ? task : newTask);
+            
+            ScreenController.reloadTaskView(listItem);
+        });
+    }
+
+    const deleteTask = (listItem, task) => {
+        const taskBtnContainer = document.getElementById('task-btn-container');
+        const cancelTaskBtn = document.getElementById('cancel-task-btn');
+        const deleteTaskBtn = document.createElement('button');
+        deleteTaskBtn.id = 'delete-task-btn';
+        deleteTaskBtn.type = 'button';
+        deleteTaskBtn.classList.add('task-btn');
+        deleteTaskBtn.textContent = 'Delete Task';
+        taskBtnContainer.insertBefore(deleteTaskBtn, cancelTaskBtn);
+
+        deleteTaskBtn.addEventListener('click', () => {
+            TaskController.deleteTask(task.id);
+            ListController.deleteTaskFromList(listItem.id, task);
+            ScreenController.reloadTaskView(listItem);
         });
     }
 
@@ -159,6 +204,9 @@ const EventController = () => {
         editOrDeleteList, 
         addTask, 
         viewTask, 
+        closeTask,
+        saveTask,
+        deleteTask,
         reloadEventListeners 
     };
 }
