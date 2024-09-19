@@ -1,3 +1,4 @@
+import EventController from "./EventController.js";
 import ListController from "./ListController.js";
 import TaskController from "./TaskController.js";
 
@@ -21,68 +22,17 @@ const ScreenController = function () {
         listsSection.appendChild(listsContainer);
     }
 
-    const addList = () => {
-        const addListBtn = document.getElementById('add-list-btn');
-        addListBtn.addEventListener('click', () => {
-            // creates "listNameInput" to type new list name
-            let listNameInput = document.createElement('input');
-            listNameInput.type = "text";
-            listNameInput.id = "add-list-name";
-            listNameInput.placeholder = "Type your new list's title";
-
-            // converts the add list button to the listNameInput
-            const listsContainer = document.getElementById('lists-container');
-            if (!listsContainer.querySelector(`input`)) {
-                listsContainer.appendChild(listNameInput);
-                listNameInput.focus();
-                addListBtn.remove();
-            }
-
-            // event listeners for when user is typing name for new list on navbar
-            // enter to create the new list
-            // escape or click elsewhere to cancel
-            listNameInput.addEventListener('keydown', (event) => {
-                if (event.key === "Enter") {
-                    let newListName = listNameInput.value ? listNameInput.value : "Untitled List";
-                    ListController.createList(newListName);
-                    loadLists();
-                    addList();
-                    openList();
-                }
-        
-                if (event.key === "Escape") {
-                    listNameInput.blur();
-                }
-            });
-
-            // removes "listNameInput" when user clicks outside or presses esc key
-            const removeListInput = () => {
-                listNameInput.remove();
-                listNameInput = null;
-                listsContainer.appendChild(addListBtn);
-            };
-            
-            listNameInput.addEventListener('focusout', removeListInput);
-        });
+    const reloadTaskView = (list) => {
+        loadTasks(list);
+        viewTask(list);
+        EventController.addTask(list);
+        EventController.editOrDeleteList(list);
     }
 
-    const openList = () => {
-        const listItems = document.querySelectorAll('.list-item');
-        const lists = ListController.getLists();
-        listItems.forEach((listItem, index) => {
-            listItem.addEventListener('click', () => {
-                loadTasks(lists[index]);
-                viewTaskListener(lists[index]);
-                reloadLists();
-                editList(lists[index]);
-            });
-        });
-    }
-
-    const reloadLists = () => {
+    const reloadNavLists = () => {
         loadLists();
-        addList();
-        openList();
+        EventController.addList();
+        EventController.openList();
     }
 
     const loadTasks = (listItem) => {
@@ -110,7 +60,7 @@ const ScreenController = function () {
             taskItem.innerHTML += `
                 <input type="checkbox" class="checkbox">
                 <div class="task-details-container">
-                    <h3 class="task-name">${task.name? task.name : "Untitled"}</h3>
+                    <h3 class="task-name">${task.name? task.name : "Untitled Task"}</h3>
                     <span class="task-date">${task.dueDate ? `Due Date: ${task.dueDate}` : ""}</span>
                     <span class="task-priority">${task.priority? `Priority: ${task.priority}` : ""}</span>
                 </div>
@@ -118,100 +68,22 @@ const ScreenController = function () {
             tasksContainer.appendChild(taskItem);
         });
         tasksContainer.innerHTML += `<button id="add-task-btn" class="task-item" type="button">+ Add Task</button>`
-        addTaskListener(listItem);
-    }
-
-    const addTaskListener = (listItem) => {
-        const addTaskBtn = document.getElementById('add-task-btn');
-        addTaskBtn.addEventListener('click', () => {
-            expandTask(listItem);
-        });
-    }
-
-    const editList = (listItem) => {
-        const listTitle = document.getElementById('content-heading');
-        const listItems = ListController.getLists();
-
-        listTitle.addEventListener('click', () => {
-            let editListContainer = document.createElement('div');
-            editListContainer.id = "edit-list-container";
-
-            let editListNameInput = document.createElement('input');
-            editListNameInput.type = "text";
-            editListNameInput.id = "edit-list-name";
-            editListNameInput.placeholder = "Edit list name";
-
-            let cancelListEditBtn = document.createElement('button')
-            cancelListEditBtn.id = "cancel-list-edit-btn";
-            cancelListEditBtn.type = "button";
-            cancelListEditBtn.innerText = "Cancel";
-
-            let deleteListBtn = document.createElement('button')
-            deleteListBtn.id = "delete-list-btn";
-            deleteListBtn.type = "button";
-            deleteListBtn.innerText = "Delete List";
-
-            // converts the add list button to the listNameInput
-            const contentContainer = document.getElementById('content-container');
-            if (!contentContainer.querySelector(`input[type="text"]`)) {
-                contentContainer.insertBefore(editListContainer, contentContainer.firstChild);
-                
-                editListContainer.appendChild(editListNameInput);
-                editListContainer.appendChild(cancelListEditBtn);
-                if (listItems.length >= 2) {
-                    editListContainer.appendChild(deleteListBtn);
-                }
-                editListNameInput.focus();
-                listTitle.remove();
-            }
-
-            // event listeners for when user is typing name for new list on navbar
-            // enter to create the new list
-            // escape or click elsewhere to cancel
-            editListNameInput.addEventListener('keydown', (event) => {
-                if (event.key === "Enter") {
-                    if (editListNameInput.value) {
-                        ListController.editListName(listItem.id, editListNameInput.value);
-                        loadTasks(listItem);
-                        reloadLists();
-                        resetExpandedTask(listItem);
-                    } else {
-                        removeEditListContainer();
-                    }
-                }
         
-                if (event.key === "Escape") {
-                    editListNameInput.blur();
-                }
-            });
-
-            const removeEditListContainer = () => {
-                editListContainer.remove();
-                editListNameInput = null;
-                contentContainer.insertBefore(listTitle, contentContainer.firstChild);
-            };
-            
-            cancelListEditBtn.addEventListener('click', removeEditListContainer);
-
-            deleteListBtn.addEventListener('click', () => {
-                ListController.deleteList(listItem.id);
-                loadTasks(listItems[0]);
-                reloadLists();
-                resetExpandedTask(listItems[0]);
-            });
-        });
+        EventController.addTask(listItem);
     }
 
-    const expandTask = (listItem, task) => {
-        let expandedTaskItem = document.createElement('div');
-        expandedTaskItem.id = "expanded-task-item";
-        expandedTaskItem.innerHTML = `
+    const taskWindowTemplate = () => {
+        let listName = document.getElementById('content-heading').innerText;
+
+        let taskWindow = document.createElement('div');
+        taskWindow.id = "task-window";
+        taskWindow.innerHTML = `
             <label id="task-title-label" class="task-input-label" for="task-title">Title: 
                 <input id="task-title" type="text" placeholder="Pet my doggo"> 
             </label>
 
-            <label id="task-desc-label" class="task-input-label" for="expanded-task-desc">Description: 
-                <textarea id="expanded-task-desc" wrap="soft" maxlength="450" placeholder="Belly rub first, brush back second... etc. (Max 450 characters) "></textarea> 
+            <label id="task-desc-label" class="task-input-label" for="task-window-desc">Description: 
+                <textarea id="task-window-desc" wrap="soft" maxlength="450" placeholder="Belly rub first, brush back second... etc. (Max 450 characters) "></textarea> 
             </label>
 
             <label id="task-date-label" class="task-input-label" for="task-date">Due Date: 
@@ -228,7 +100,7 @@ const ScreenController = function () {
             </label>
 
             <label id="task-list-label" class="task-input-label" for="task-list">List: 
-            <span id="task-list">${listItem.name}</span>
+                <span id="task-list">${listName}</span>
             </label>
 
             <label id="task-notes-label" class="task-input-label" for="task-notes">Notes: 
@@ -240,20 +112,24 @@ const ScreenController = function () {
                 <button id="cancel-task-btn" class="task-btn" type="button">Cancel</button>
             </div>
             `;
+        return taskWindow;
+    }
+
+    const openTaskWindow = (listItem, task) => {
+        let taskWindow = taskWindowTemplate();
 
         const contentContainer = document.getElementById('content-container');
         const tasksContainer = document.getElementById('task-container');
         const contentHeading = document.getElementById('content-heading');
         
-
-        if (!contentContainer.querySelector(`#expanded-task-item`)) {
-            contentContainer.appendChild(expandedTaskItem);
+        if (!contentContainer.querySelector(`#task-window`)) {
+            contentContainer.appendChild(taskWindow);
             tasksContainer.style.filter = "blur(3px)";
             contentHeading.style.filter = "blur(3px)";
 
             if (task) {
                 document.getElementById('task-title').value = task.name;
-                document.getElementById('expanded-task-desc').value = task.description;
+                document.getElementById('task-window-desc').value = task.description;
                 document.getElementById('task-date').value = task.dueDate;
                 document.getElementById('task-priority').value = task.priority;
                 document.getElementById('task-list').value = task.list;
@@ -267,14 +143,14 @@ const ScreenController = function () {
             cancelTaskListener(listItem);
         }
 
-        return expandedTaskItem;
+        return taskWindow;
     }
 
-    const resetExpandedTask = (listItem) => {
+    const closeTaskWindow = (listItem) => {
         loadTasks(listItem);
-        addTaskListener(listItem);
-        viewTaskListener(listItem);
-        editList(listItem);
+        EventController.addTask(listItem);
+        viewTask(listItem);
+        EventController.editOrDeleteList(listItem);
     };
 
     const saveTaskListener = (listItem, task) => {
@@ -282,7 +158,7 @@ const ScreenController = function () {
         const saveTaskBtn = document.getElementById('save-task-btn');
         saveTaskBtn.addEventListener('click', () => {
             let name = document.getElementById('task-title').value;
-            let description = document.getElementById('expanded-task-desc').value;
+            let description = document.getElementById('task-window-desc').value;
             let dueDate = document.getElementById('task-date').value;
             let priority = document.getElementById('task-priority').value;
             let notes = document.getElementById('task-notes').value;
@@ -294,7 +170,7 @@ const ScreenController = function () {
 
             ListController.addTaskToList(listItem.id, task ? task : newTask);
             
-            resetExpandedTask(listItem);
+            closeTaskWindow(listItem);
         });
     }
 
@@ -311,28 +187,28 @@ const ScreenController = function () {
         deleteTaskBtn.addEventListener('click', () => {
             TaskController.deleteTask(task.id);
             ListController.deleteTaskFromList(listItem.id, task);
-            resetExpandedTask(listItem);
+            closeTaskWindow(listItem);
         });
     }
 
     const cancelTaskListener = (listItem) => {
         const cancelTaskBtn = document.getElementById('cancel-task-btn');
         cancelTaskBtn.addEventListener('click', () => {
-            resetExpandedTask(listItem);
+            closeTaskWindow(listItem);
         });
     }
     
-    const viewTaskListener = (listItem) => {
+    const viewTask = (listItem) => {
         const tasks = TaskController.getTasks(listItem.id);
         const taskItems = document.querySelectorAll('.task-item');
         taskItems.forEach((taskItem, index) => {
             taskItem.addEventListener('click', () => {
-                expandTask(listItem, tasks[index]);
+                openTaskWindow(listItem, tasks[index]);
             });
         });
     }
     
-    return { loadLists, addList, openList, loadTasks, editList, addTaskListener, viewTaskListener, };
+    return { loadLists, reloadNavLists, reloadTaskView, loadTasks, openTaskWindow, closeTaskWindow, viewTask, };
 };
 
 export default ScreenController();
