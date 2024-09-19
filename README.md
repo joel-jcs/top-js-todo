@@ -1,1 +1,1 @@
-# top-js-restaurant
+# To-Do List Project (The Odin Project)
