@@ -134,6 +134,7 @@ const ScreenController = function () {
                 EventController.completeTask(currentList, existingTask);
                 EventController.deleteTask(currentList, existingTask);
             } else { //new task
+                EventController.removeCompleteTaskBtn();
                 EventController.saveTask(currentList);
             }
             EventController.closeTask(currentList);

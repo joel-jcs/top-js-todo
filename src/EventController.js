@@ -182,15 +182,25 @@ const EventController = () => {
     }
 
     const completeTask = (currentList, openedTask) => {
+        const taskBtnContainer = document.getElementById('task-btn-container');
         const completeTaskBtn = document.getElementById('complete-task-btn');
-        completeTaskBtn.addEventListener('click', () => {
-            TaskController.completeTask(openedTask.id);
-            completeTaskBtn.textContent = completeTaskBtn.textContent === 'Mark Complete' ? 'Completed' : 'Mark Complete';
-            completeTaskBtn.style.backgroundColor = completeTaskBtn.style.backgroundColor === "gray" ? "green" : "gray";
-            ScreenController.loadTasks(currentList);
-            loadEventListeners(currentList);
-            console.log(openedTask);
-        });
+
+        // if (!completeTaskBtn) {
+        //     const completeTaskBtn = document.createElement('button');
+        //     completeTaskBtn.id = "complete-task-btn";
+        //     completeTaskBtn.classList.add("task-btn");
+        //     completeTaskBtn.type = "button";
+        //     completeTaskBtn.textContent = "Mark Complete";
+        //     taskBtnContainer.appendChild(completeTaskBtn);
+        // } else {
+            completeTaskBtn.addEventListener('click', () => {
+                TaskController.completeTask(openedTask.id);
+                completeTaskBtn.textContent = completeTaskBtn.textContent === 'Mark Complete' ? 'Completed' : 'Mark Complete';
+                completeTaskBtn.style.backgroundColor = completeTaskBtn.style.backgroundColor === "gray" ? "green" : "gray";
+                ScreenController.loadTasks(currentList);
+                loadEventListeners(currentList);
+            });
+        // }
     };
 
     const taskCompleteCheckbox = (currentList) => {
@@ -201,9 +211,14 @@ const EventController = () => {
                 TaskController.completeTask(task.id);
                 ScreenController.loadTasks(currentList);
                 loadEventListeners(currentList);
-                console.log(task);
             })            
         });
+    }
+
+    const removeCompleteTaskBtn = () => {
+        const taskBtnContainer = document.getElementById('task-btn-container');
+        const completeTaskBtn = document.getElementById('complete-task-btn');
+        taskBtnContainer.removeChild(completeTaskBtn);
     }
 
     const deleteTask = (currentList, openedTask) => {
@@ -243,6 +258,7 @@ const EventController = () => {
         saveTask,
         completeTask,
         taskCompleteCheckbox,
+        removeCompleteTaskBtn,
         deleteTask,
         loadEventListeners,
     };
