@@ -22,7 +22,7 @@ const ScreenController = function () {
         listsSection.appendChild(listsContainer);
     }
 
-    const loadTasks = (listItem) => {
+    const loadTasks = (selectedList) => {
         const contentContainer = document.getElementById('content-container');
         contentContainer.innerHTML = '';
 
@@ -30,7 +30,7 @@ const ScreenController = function () {
         let contentHeading = document.createElement('h1');
         contentHeading.id = "content-heading";
         contentHeading.innerHTML = '';
-        contentHeading.innerText = listItem.name;
+        contentHeading.innerText = selectedList.name;
         contentContainer.appendChild(contentHeading);
 
         // initialize task container
@@ -40,7 +40,7 @@ const ScreenController = function () {
         contentContainer.appendChild(tasksContainer);
 
         // add tasks to DOM
-        const tasks = TaskController.getTasks(listItem.id);
+        const tasks = TaskController.getTasks(selectedList.id);
         tasks.forEach(task => {
             const taskItem = document.createElement('div');
             taskItem.classList.add("task-item");
@@ -100,7 +100,7 @@ const ScreenController = function () {
         return taskWindow;
     }
 
-    const openTaskWindow = (listItem, task) => {
+    const openTaskWindow = (currentList, existingTask) => {
         let taskWindow = taskWindowTemplate();
 
         const contentContainer = document.getElementById('content-container');
@@ -112,20 +112,20 @@ const ScreenController = function () {
             tasksContainer.style.filter = "blur(3px)";
             contentHeading.style.filter = "blur(3px)";
 
-            if (task) {
-                document.getElementById('task-title').value = task.name;
-                document.getElementById('task-window-desc').value = task.description;
-                document.getElementById('task-date').value = task.dueDate;
-                document.getElementById('task-priority').value = task.priority;
-                document.getElementById('task-list').value = task.list;
-                document.getElementById('task-notes').value = task.notes;
+            if (existingTask) {
+                document.getElementById('task-title').value = existingTask.name;
+                document.getElementById('task-window-desc').value = existingTask.description;
+                document.getElementById('task-date').value = existingTask.dueDate;
+                document.getElementById('task-priority').value = existingTask.priority;
+                document.getElementById('task-list').value = existingTask.list;
+                document.getElementById('task-notes').value = existingTask.notes;
 
-                EventController.saveTask(listItem, task);
-                EventController.deleteTask(listItem, task);
+                EventController.saveTask(currentList, existingTask);
+                EventController.deleteTask(currentList, existingTask);
             } else { //new task, didnt exist before
-                EventController.saveTask(listItem);
+                EventController.saveTask(currentList);
             }
-            EventController.closeTask(listItem);
+            EventController.closeTask(currentList);
         }
         return taskWindow;
     }
