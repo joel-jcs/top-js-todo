@@ -5,20 +5,7 @@ const ListController = () => {
         {
             id: 12345,
             name: "My First List",
-            tasks: [
-                {
-                    id: 12345,
-                    name: "go shopping",
-                    description: "at the mall",
-                    dueDate: "2022-09-20",
-                    priority: "High",
-                    list: {
-                        id: 12345,
-                        name: "My First List",
-                    },
-                    notes: "text for notes",
-                }
-            ],
+            tasks: [TaskController.getTasks(12345)[0]],
         }
     ];
 
