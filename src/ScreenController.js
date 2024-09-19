@@ -72,7 +72,7 @@ const ScreenController = function () {
         listItems.forEach((listItem, index) => {
             listItem.addEventListener('click', () => {
                 loadTasks(lists[index]);
-                console.log(lists[index]);
+                viewTaskListener(lists[index]);
                 loadLists();
                 addList();
                 viewList();
@@ -88,7 +88,7 @@ const ScreenController = function () {
         let contentHeading = document.createElement('h1');
         contentHeading.id = "content-heading";
         contentHeading.innerHTML = '';
-        contentHeading.innerText = listItem ? listItem.name : "All Tasks";
+        contentHeading.innerText = listItem.name;
         contentContainer.appendChild(contentHeading);
 
         // initialize task container
@@ -98,7 +98,7 @@ const ScreenController = function () {
         contentContainer.appendChild(tasksContainer);
 
         // add tasks to DOM
-        const tasks = TaskController.getTasks(listItem ? listItem.id : null);
+        const tasks = TaskController.getTasks(listItem.id);
         tasks.forEach(task => {
             const taskItem = document.createElement('div');
             taskItem.classList.add("task-item");
@@ -110,7 +110,6 @@ const ScreenController = function () {
                     <span class="task-priority">${task.priority? `Priority: ${task.priority}` : ""}</span>
                 </div>
             `;
-
             tasksContainer.appendChild(taskItem);
         });
         tasksContainer.innerHTML += `<button id="add-task-btn" class="task-item" type="button">+ Add Task</button>`
@@ -150,11 +149,7 @@ const ScreenController = function () {
             </label>
 
             <label id="task-list-label" class="task-input-label" for="task-list">List: 
-            <select id="task-list">
-                <option value="" selected>Select a list...</option>
-                <option value="list1">List 1</option>
-                <option value="new-list">+ Create new list</option>
-            </select>
+            <span id="task-list">${listItem.name}</span>
             </label>
 
             <label id="task-notes-label" class="task-input-label" for="task-notes">Notes: 
@@ -167,12 +162,10 @@ const ScreenController = function () {
             </div>
             `;
 
-            // lower priority: fix issue where clicking on add task and then 
-            // clicking on another task will not show the existing task's info
-            
         const contentContainer = document.getElementById('content-container');
         const tasksContainer = document.getElementById('task-container');
         const contentHeading = document.getElementById('content-heading');
+        
 
         if (!contentContainer.querySelector(`#expanded-task-item`)) {
             contentContainer.appendChild(expandedTaskItem);
@@ -187,9 +180,9 @@ const ScreenController = function () {
                 document.getElementById('task-list').value = task.list;
                 document.getElementById('task-notes').value = task.notes;
 
-                saveTaskListener(listItem, task.id);
-                deleteTaskListener(listItem, task.id);
-            } else {
+                saveTaskListener(listItem, task);
+                deleteTaskListener(listItem, task);
+            } else { //new task, didnt exist before
                 saveTaskListener(listItem);
             }
             cancelTaskListener(listItem);
@@ -201,29 +194,31 @@ const ScreenController = function () {
     const resetExpandedTask = (listItem) => {
         loadTasks(listItem);
         addTaskListener(listItem);
-        viewTask(listItem);
+        viewTaskListener(listItem);
     };
 
-    const saveTaskListener = (listItem, taskId) => {
+    const saveTaskListener = (listItem, task) => {
+        let newTask = null;
         const saveTaskBtn = document.getElementById('save-task-btn');
         saveTaskBtn.addEventListener('click', () => {
             let name = document.getElementById('task-title').value;
             let description = document.getElementById('expanded-task-desc').value;
             let dueDate = document.getElementById('task-date').value;
             let priority = document.getElementById('task-priority').value;
-            let list = document.getElementById('task-list').value;
             let notes = document.getElementById('task-notes').value;
-            if (taskId) {
-                TaskController.updateTask(taskId, name, description, dueDate, priority, notes, list);
+            if (task) {
+                task = TaskController.updateTask(task.id, name, description, dueDate, priority, notes, listItem);
             } else {
-                TaskController.createTask(name, description, dueDate, priority, notes, list);
+                newTask = TaskController.createTask(name, description, dueDate, priority, notes, listItem);
             }
+
+            ListController.addTaskToList(listItem.id, task ? task : newTask);
             
             resetExpandedTask(listItem);
         });
     }
 
-    const deleteTaskListener = (listItem, taskId) => {
+    const deleteTaskListener = (listItem, task) => {
         const taskBtnContainer = document.getElementById('task-btn-container');
         const cancelTaskBtn = document.getElementById('cancel-task-btn');
         const deleteTaskBtn = document.createElement('button');
@@ -234,7 +229,8 @@ const ScreenController = function () {
         taskBtnContainer.insertBefore(deleteTaskBtn, cancelTaskBtn);
 
         deleteTaskBtn.addEventListener('click', () => {
-            TaskController.deleteTask(taskId);
+            TaskController.deleteTask(task.id);
+            ListController.deleteTaskFromList(listItem.id, task);
             resetExpandedTask(listItem);
         });
     }
@@ -246,8 +242,8 @@ const ScreenController = function () {
         });
     }
     
-    const viewTask = (listItem) => {
-        const tasks = TaskController.getTasks();
+    const viewTaskListener = (listItem) => {
+        const tasks = TaskController.getTasks(listItem.id);
         const taskItems = document.querySelectorAll('.task-item');
         taskItems.forEach((taskItem, index) => {
             taskItem.addEventListener('click', () => {
@@ -256,7 +252,7 @@ const ScreenController = function () {
         });
     }
     
-    return { loadLists, addList, viewList, loadTasks, addTaskListener, viewTask, };
+    return { loadLists, addList, viewList, loadTasks, addTaskListener, viewTaskListener, };
 };
 
 export default ScreenController();

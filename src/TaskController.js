@@ -6,7 +6,10 @@ const TaskController = () => {
             description: "at the mall",
             dueDate: "2022-09-20",
             priority: "High",
-            list: "list1",
+            list: {
+                id: 12345,
+                name: "My First List",
+            },
             notes: "text for notes",
         }
     ];
@@ -19,35 +22,38 @@ const TaskController = () => {
             dueDate,
             priority,
             notes,
-            list
+            list: {
+                id: list.id,
+                name: list.name,
+            }
         }
 
         tasks.push(task);
-        console.log(task);
-        console.table(tasks)
         
         return task;
     }
 
     const getTasks = (listId) => {
         if (listId) {
-            return tasks.filter(task => task.list === listId);
+            return tasks.filter(task => task.list.id === listId);
         } else {
             return tasks;
         }
     };
 
     const updateTask = (id, name, description, dueDate, priority, notes, list) => {
-        console.table(tasks);
         let taskToUpdate = tasks.find(task => task.id === id);
+
         taskToUpdate.name = name;
         taskToUpdate.description = description;
         taskToUpdate.dueDate = dueDate;
         taskToUpdate.priority = priority;
         taskToUpdate.notes = notes;
-        taskToUpdate.list = list;
+        taskToUpdate.list = { 
+            id: list.id, 
+            name: list.name 
+        };
 
-        console.table(tasks);
         return taskToUpdate;
     };
 
