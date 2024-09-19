@@ -47,7 +47,7 @@ const ScreenController = function () {
                     ListController.createList(newListName);
                     loadLists();
                     addList();
-                    viewList();
+                    openList();
                 }
         
                 if (event.key === "Escape") {
@@ -66,18 +66,23 @@ const ScreenController = function () {
         });
     }
 
-    const viewList = () => {
+    const openList = () => {
         const listItems = document.querySelectorAll('.list-item');
         const lists = ListController.getLists();
         listItems.forEach((listItem, index) => {
             listItem.addEventListener('click', () => {
                 loadTasks(lists[index]);
                 viewTaskListener(lists[index]);
-                loadLists();
-                addList();
-                viewList();
+                reloadLists();
+                editList(lists[index]);
             });
         });
+    }
+
+    const reloadLists = () => {
+        loadLists();
+        addList();
+        openList();
     }
 
     const loadTasks = (listItem) => {
@@ -120,6 +125,77 @@ const ScreenController = function () {
         const addTaskBtn = document.getElementById('add-task-btn');
         addTaskBtn.addEventListener('click', () => {
             expandTask(listItem);
+        });
+    }
+
+    const editList = (listItem) => {
+        const listTitle = document.getElementById('content-heading');
+        const listItems = ListController.getLists();
+
+        listTitle.addEventListener('click', () => {
+            console.log("working")
+
+            let editListContainer = document.createElement('div');
+            editListContainer.id = "edit-list-container";
+
+            let editListNameInput = document.createElement('input');
+            editListNameInput.type = "text";
+            editListNameInput.id = "edit-list-name";
+            editListNameInput.placeholder = "Edit list name";
+
+            let cancelListEditBtn = document.createElement('button')
+            cancelListEditBtn.id = "cancel-list-edit-btn";
+            cancelListEditBtn.type = "button";
+            cancelListEditBtn.innerText = "Cancel";
+
+            let deleteListBtn = document.createElement('button')
+            deleteListBtn.id = "delete-list-btn";
+            deleteListBtn.type = "button";
+            deleteListBtn.innerText = "Delete List";
+
+            // converts the add list button to the listNameInput
+            const contentContainer = document.getElementById('content-container');
+            if (!contentContainer.querySelector(`input[type="text"]`)) {
+                contentContainer.insertBefore(editListContainer, contentContainer.firstChild);
+                
+                editListContainer.appendChild(editListNameInput);
+                editListContainer.appendChild(cancelListEditBtn);
+                if (listItems.length >= 2) {
+                    editListContainer.appendChild(deleteListBtn);
+                }
+                editListNameInput.focus();
+                listTitle.remove();
+            }
+
+            // event listeners for when user is typing name for new list on navbar
+            // enter to create the new list
+            // escape or click elsewhere to cancel
+            editListNameInput.addEventListener('keydown', (event) => {
+                if (event.key === "Enter") {
+                    // let newListName = editListNameInput.value ? listNameInput.value : "Untitled List";
+                    // ListController.createList(newListName);
+                    // reloadLists();
+                }
+        
+                if (event.key === "Escape") {
+                    editListNameInput.blur();
+                }
+            });
+
+            const removeEditListContainer = () => {
+                editListContainer.remove();
+                editListNameInput = null;
+                contentContainer.insertBefore(listTitle, contentContainer.firstChild);
+            };
+            
+            cancelListEditBtn.addEventListener('click', removeEditListContainer);
+
+            deleteListBtn.addEventListener('click', () => {
+                ListController.deleteList(listItem.id);
+                loadTasks(listItems[0]);
+                reloadLists();
+                resetExpandedTask(listItems[0]);
+            });
         });
     }
 
@@ -195,6 +271,7 @@ const ScreenController = function () {
         loadTasks(listItem);
         addTaskListener(listItem);
         viewTaskListener(listItem);
+        editList(listItem);
     };
 
     const saveTaskListener = (listItem, task) => {
@@ -252,7 +329,7 @@ const ScreenController = function () {
         });
     }
     
-    return { loadLists, addList, viewList, loadTasks, addTaskListener, viewTaskListener, };
+    return { loadLists, addList, openList, loadTasks, editList, addTaskListener, viewTaskListener, };
 };
 
 export default ScreenController();

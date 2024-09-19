@@ -1,3 +1,5 @@
+import TaskController from "./TaskController.js";
+
 const ListController = () => {
     let lists = [
         {
@@ -61,7 +63,12 @@ const ListController = () => {
     };
 
     const deleteList = (id) => {
+        const listToDelete = lists.findIndex(list => list.id === id);
+        lists.splice(listToDelete, 1);
+        console.table(lists);
 
+        //delete all tasks belnging to the deleted list
+        TaskController.getTasks(id).forEach(task => TaskController.deleteTask(task.id));
     };
     
     return {
