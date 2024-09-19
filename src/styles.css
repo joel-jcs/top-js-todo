@@ -213,7 +213,7 @@ button {
     line-height: 15px;
 }
 
-#expanded-task-item {
+#task-window {
     display: grid;
     grid-template-areas: 
         "title date"
@@ -263,14 +263,14 @@ button {
     grid-area: notes;
 }
 
-#expanded-task-item label {
+#task-window label {
     display: flex;
     flex-direction: column;
     width: 80%;
     margin: 0 auto;
 }
 
-#expanded-task-item input, #expanded-task-item select {
+#task-window input, #task-window select {
     height:40px;
     border:none;
     border-bottom:1px solid gray;
@@ -278,12 +278,12 @@ button {
     background-color: transparent;
 }
 
-#expanded-task-item select option {
+#task-window select option {
     background-color: var(--content-bg);
     border:none;
 }
 
-#expanded-task-desc {
+#task-window-desc {
     height:260px;
     border:none;
     border-bottom:1px solid gray;
