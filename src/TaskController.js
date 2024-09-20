@@ -30,6 +30,7 @@ const TaskController = () => {
         }
 
         tasks.push(task);
+        saveTasksToStorage();
         
         return task;
     }
@@ -55,12 +56,15 @@ const TaskController = () => {
             name: list.name 
         };
 
+        saveTasksToStorage();
+
         return taskToUpdate;
     };
 
     const completeTask = (id) => {
         let taskToComplete = tasks.find(task => task.id === id);
         taskToComplete.completed = !taskToComplete.completed;
+        saveTasksToStorage();
     };
 
     const editListNameInTasks = (id, name) => {
@@ -69,11 +73,29 @@ const TaskController = () => {
                 task.list.name = name;
             }
         });
+        saveTasksToStorage();
     };
 
     const deleteTask = (id) => {
         let taskToDelete = tasks.find(task => task.id === id);
         tasks.splice(tasks.indexOf(taskToDelete), 1);
+        saveTasksToStorage();
+    };
+
+    const saveTasksToStorage = () => {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    };
+
+    const getTasksFromStorage = (listId) => {
+        if (localStorage.getItem('tasks')) {
+            tasks = JSON.parse(localStorage.getItem('tasks'))
+        };
+
+        if (listId) {
+            return tasks.filter(task => task.list.id === listId);
+        } else {
+            return tasks;
+        }
     };
 
     return { 
@@ -83,6 +105,7 @@ const TaskController = () => {
         completeTask, 
         editListNameInTasks, 
         deleteTask,
+        getTasksFromStorage,
     };
 };
 

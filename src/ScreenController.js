@@ -12,7 +12,8 @@ const ScreenController = function () {
 
         listsContainer.innerHTML = `<h1 id="lists-heading">My Lists</h1>`
 
-        const lists = ListController.getLists();
+        const listsInStorage = ListController.getListsFromStorage();
+        const lists = listsInStorage ? listsInStorage : ListController.getLists();
         lists.forEach(list => {
             listsContainer.innerHTML += `<button class="list-item">${list.name}</button>`;
         });
@@ -40,7 +41,8 @@ const ScreenController = function () {
         contentContainer.appendChild(tasksContainer);
 
         // add tasks to DOM
-        const tasks = TaskController.getTasks(selectedList.id);
+        const tasksFromStorage = TaskController.getTasksFromStorage(selectedList.id);
+        const tasks = tasksFromStorage ? tasksFromStorage : TaskController.getTasks(selectedList.id);
         tasks.forEach(task => {
             const taskItem = document.createElement('div');
             let isTaskCompleted = task.completed;

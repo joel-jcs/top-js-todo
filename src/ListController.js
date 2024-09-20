@@ -18,6 +18,7 @@ const ListController = () => {
         }
 
         lists.push(list);
+        saveListsToStorage();
         
         return list;
     }
@@ -31,6 +32,7 @@ const ListController = () => {
             });
         });
         TaskController.editListNameInTasks(id, name);
+        saveListsToStorage();
     }
 
     const getLists = () => lists;
@@ -47,12 +49,14 @@ const ListController = () => {
         } else {
             listToUpdate.tasks.push(task);
         }
+        saveListsToStorage();
     };
 
     const deleteTaskFromList = (id, task) => {
         let listToUpdate = lists.find(list => list.id === id);
         const taskIndex = listToUpdate.tasks.findIndex(taskIndex => taskIndex.id === task.id);
         listToUpdate.tasks.splice(taskIndex, 1);
+        saveListsToStorage();
     };
 
     const deleteList = (id) => {
@@ -61,7 +65,19 @@ const ListController = () => {
 
         //delete all tasks belnging to the deleted list
         TaskController.getTasks(id).forEach(task => TaskController.deleteTask(task.id));
+        saveListsToStorage();
     };
+
+    const saveListsToStorage = () => {
+        localStorage.setItem('lists', JSON.stringify(lists));
+    };
+
+    const getListsFromStorage = () => {
+        if (localStorage.getItem('lists')) {
+            lists = JSON.parse(localStorage.getItem('lists'));
+        }
+        return lists;
+    }
     
     return {
         createList,
@@ -69,7 +85,8 @@ const ListController = () => {
         getLists,
         addTaskToList,
         deleteTaskFromList,
-        deleteList
+        deleteList,
+        getListsFromStorage,
     }
 };
 
