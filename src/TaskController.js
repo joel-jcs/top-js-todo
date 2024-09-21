@@ -89,7 +89,7 @@ const TaskController = () => {
     const getTasksFromStorage = (listId) => {
         if (localStorage.getItem('tasks')) {
             tasks = JSON.parse(localStorage.getItem('tasks'))
-        };
+        }
 
         if (listId) {
             return tasks.filter(task => task.list.id === listId);

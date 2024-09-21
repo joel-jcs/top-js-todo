@@ -9,11 +9,10 @@ const ListController = () => {
         }
     ];
 
-    const createList = (listName, task) => {
+    const createList = (listName) => {
         const list = {
             id: Date.now(),
             name: listName,
-            // tasks: [task],
             tasks: [],
         }
 
