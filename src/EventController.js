@@ -3,7 +3,6 @@ import TaskController from "./TaskController";
 import ListController from "./ListController";
 
 const EventController = () => {
-
     const addList = () => {
         const addListBtn = document.getElementById('add-list-btn');
         addListBtn.addEventListener('click', () => {
@@ -182,17 +181,7 @@ const EventController = () => {
     }
 
     const completeTask = (currentList, openedTask) => {
-        const taskBtnContainer = document.getElementById('task-btn-container');
         const completeTaskBtn = document.getElementById('complete-task-btn');
-
-        // if (!completeTaskBtn) {
-        //     const completeTaskBtn = document.createElement('button');
-        //     completeTaskBtn.id = "complete-task-btn";
-        //     completeTaskBtn.classList.add("task-btn");
-        //     completeTaskBtn.type = "button";
-        //     completeTaskBtn.textContent = "Mark Complete";
-        //     taskBtnContainer.appendChild(completeTaskBtn);
-        // } else {
             completeTaskBtn.addEventListener('click', () => {
                 TaskController.completeTask(openedTask.id);
                 completeTaskBtn.textContent = completeTaskBtn.textContent === 'Mark Complete' ? 'Completed' : 'Mark Complete';
@@ -200,7 +189,6 @@ const EventController = () => {
                 ScreenController.loadTasks(currentList);
                 loadEventListeners(currentList);
             });
-        // }
     };
 
     const taskCompleteCheckbox = (currentList) => {
